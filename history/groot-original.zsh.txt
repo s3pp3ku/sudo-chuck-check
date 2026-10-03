@@ -1,0 +1,31 @@
+# Reminder banner before sudo actually asks for your password. A function is
+# used (not an alias) so it survives being called twice in one command and
+# doesn't expand inside scripts. Nothing prints while sudoers credentials are
+# still cached, so the banner only shows when you are really about to type
+# your password. Set SUDO_QUIET=1 to disable it for a session.
+sudo() {
+    if (( ${SUDO_QUIET:-0} )) || command sudo -n true 2>/dev/null; then
+        command sudo "$@"
+        return
+    fi
+
+    local G=$'\e[38;5;112m'  # green
+    local R=$'\e[38;5;184m'  # red
+    local B=$'\e[38;5;124m'  # bright red
+    local W=$'\e[37m'         # white
+    local N=$'\e[0m'          # reset
+
+    echo
+    echo -e "      \e[1m${G}\\^V//"
+    echo -e "      ${R}|${W}· ·${R}|      \e[94mI AM (G)ROOT !"
+    echo -e "    ${G}- ${R}\\ - /"
+    echo -e "     \\_| |_/${G}¯"
+    echo -e "       ${R}\\ \\\\"
+    echo -e "     ${B}__${R}/${B}_${R}/${B}__"
+    echo -e "    |_______|     ${N}With great power comes great responsibility${B}\\e[1m"
+    echo -e "     \\     /      ${N}Use sudo wisely.${B}\\e[1m"
+    echo -e "      \\___/${N}"
+    echo
+
+    command sudo "$@"
+}

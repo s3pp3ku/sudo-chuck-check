@@ -1,12 +1,26 @@
-# Chuck Sudo
+# Sudo Chuck Check
 
 A pixel-art Chuck Norris and a rotating joke before your interactive Zsh sudo password check.
 
 > Chuck Norris doesn't sudo. The root user asks him for permission.
 
-<img src="chuck-norris.png" width="220" alt="Pixel-art Chuck Norris with raised fists in a fighting stance">
+![Sudo Chuck Check terminal preview](docs/images/sudo-chuck-check-banner.png)
 
-Open [preview.html](preview.html) locally for an illustrative banner preview.
+Open [preview.html](preview.html) locally for the interactive before-and-after
+preview. These images are illustrative recreations, not archival screenshots.
+
+## How it started
+
+I'm a computer enthusiast, not a programmer. Years ago I found a Groot sudo
+signature in a Reddit thread and enjoyed using it. Seeing Paul Hocker's Chuck
+Norris plugin for Omarchy gave me the idea to rework it, and I used AI tools to
+help build what became **Sudo Chuck Check**.
+
+![Recreated previous Groot sudo signature](docs/images/groot-banner.png)
+
+The [project history](HISTORY.md) tells the story and preserves the original Groot
+signature. The Reddit thread and its author are currently unknown; I'd welcome
+a link so the original creator can be credited.
 
 ## What it does
 
@@ -30,7 +44,7 @@ Bash can preview with `python3 render.py`, but the sudo hook requires Zsh.
 
 ## Install
 
-Download and extract the release ZIP, enter its `chuck-sudo` directory, then run:
+Download and extract the release ZIP, enter its `sudo-chuck-check` directory, then run:
 
 ```sh
 python3 install.py
@@ -42,7 +56,7 @@ Open a new Zsh terminal and preview:
 sudo_chuck_banner
 ```
 
-The installer copies the package into `${XDG_DATA_HOME:-~/.local/share}/chuck-sudo`,
+The installer copies the package into `${XDG_DATA_HOME:-~/.local/share}/sudo-chuck-check`,
 backs up your `.zshrc`, and adds a marked source block. Reinstalling updates the
 package without duplicating the block. `ZDOTDIR` is respected. It does not install
 system packages. To add the image dependency on Arch/Omarchy:
@@ -54,15 +68,23 @@ sudo pacman -S --needed imagemagick
 You can also try it without installing, from a fresh Zsh session:
 
 ```zsh
-source ./chuck-sudo.plugin.zsh
+source ./sudo-chuck-check.plugin.zsh
 sudo_chuck_banner
 ```
 
 ### Oh My Zsh custom plugin
 
 As an alternative to the installer, put this entire directory at
-`${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/chuck-sudo` and add `chuck-sudo`
+`${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/sudo-chuck-check` and add `sudo-chuck-check`
 to your `plugins=(...)` list. Choose one installation method.
+
+### Upgrading from Chuck Sudo
+
+Run the new installer from this release, then open a new terminal. It replaces the
+old `chuck-sudo` source block with `sudo-chuck-check`. The old installation folder
+is retained as a rollback copy. `sudo_chuck_banner` and the `SUDO_CHUCK_*` settings
+keep their names. For a manual Oh My Zsh installation, replace the old plugin
+directory and change the entry in `plugins=(...)` to `sudo-chuck-check`.
 
 ## Options
 
@@ -97,13 +119,13 @@ python3 install.py --uninstall
 Or run the installed copy:
 
 ```sh
-python3 "${XDG_DATA_HOME:-$HOME/.local/share}/chuck-sudo/install.py" --uninstall
+python3 "${XDG_DATA_HOME:-$HOME/.local/share}/sudo-chuck-check/install.py" --uninstall
 ```
 
 Open a new terminal afterward. The uninstaller removes its marked source block and
 owned package files, preserving other configuration and any added files. Config
-backups and disposable `${XDG_CACHE_HOME:-~/.cache}/chuck-sudo` image caches remain.
-For a manual Oh My Zsh installation, remove `chuck-sudo` from `plugins=(...)` and
+backups and disposable `${XDG_CACHE_HOME:-~/.cache}/sudo-chuck-check` image caches remain.
+For a manual Oh My Zsh installation, remove `sudo-chuck-check` from `plugins=(...)` and
 remove its custom-plugin directory.
 
 ## Share or contribute
@@ -115,6 +137,7 @@ ready-to-paste [Show and Tell announcement](SHOW-AND-TELL.md).
 python3 -m unittest discover -s tests -v
 ```
 
-Code: MIT. Bundled jokes: Oh My Zsh, with its MIT notice preserved under `licenses/`.
+New code: MIT. The historical Groot snippet has an unidentified Reddit source;
+see [HISTORY.md](HISTORY.md). Bundled jokes: Oh My Zsh, with its MIT notice preserved under `licenses/`.
 The sprite was generated using OpenAI's built-in image tool; its prompt is included.
 See [NOTICE.md](NOTICE.md) for credits. Created with AI assistance.

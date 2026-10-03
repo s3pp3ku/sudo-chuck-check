@@ -11,10 +11,25 @@ import threading
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-PLUGIN = ROOT / 'chuck-sudo.plugin.zsh'
+PLUGIN = ROOT / 'sudo-chuck-check.plugin.zsh'
 
 
 class PackageTests(unittest.TestCase):
+    def test_migrates_previous_project_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            config = base / '.zshrc'
+            original = b'# keep my settings\n'
+            config.write_bytes(original + b'\n# >>> chuck-sudo >>>\nsource /old/chuck-sudo.plugin.zsh\n# <<< chuck-sudo <<<\n')
+            prefix = base / 'sudo-chuck-check'
+            args = [sys.executable, str(ROOT / 'install.py'), '--prefix', str(prefix),
+                    '--zshrc', str(config)]
+            subprocess.run(args, check=True, capture_output=True)
+            self.assertNotIn(b'# >>> chuck-sudo >>>', config.read_bytes())
+            self.assertEqual(config.read_bytes().count(b'# >>> sudo-chuck-check >>>'), 1)
+            subprocess.run(args + ['--uninstall'], check=True, capture_output=True)
+            self.assertEqual(config.read_bytes(), original)
+
     def test_install_update_uninstall_preserves_config(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)
@@ -28,8 +43,8 @@ class PackageTests(unittest.TestCase):
             installed = config.read_bytes()
             subprocess.run(args, check=True, capture_output=True)
             self.assertEqual(config.read_bytes(), installed)
-            self.assertEqual(installed.count(b'# >>> chuck-sudo >>>'), 1)
-            self.assertTrue(list(base.glob('.zshrc.bak.chuck-sudo-*')))
+            self.assertEqual(installed.count(b'# >>> sudo-chuck-check >>>'), 1)
+            self.assertTrue(list(base.glob('.zshrc.bak.sudo-chuck-check-*')))
             preview = subprocess.run(['zsh', '-fc', 'source "$1"; sudo_chuck_banner',
                                       'test', str(config)], capture_output=True)
             self.assertEqual(preview.returncode, 0, preview.stderr)
@@ -39,7 +54,7 @@ class PackageTests(unittest.TestCase):
             subprocess.run(args + ['--uninstall'], check=True, capture_output=True)
             self.assertEqual(config.read_bytes(), original)
             self.assertEqual((prefix / 'keep-me.txt').read_text(), 'added by user')
-            self.assertFalse((prefix / 'chuck-sudo.plugin.zsh').exists())
+            self.assertFalse((prefix / 'sudo-chuck-check.plugin.zsh').exists())
 
     def test_joke_cycle_and_reload(self):
         script = '''source "$1"

@@ -1,4 +1,4 @@
-# Chuck Sudo: source this file from Zsh or load it as an Oh My Zsh custom plugin.
+# Sudo Chuck Check: source this file from Zsh or load it as an Oh My Zsh custom plugin.
 [[ -n ${ZSH_VERSION-} ]] || return 0
 [[ ${_SUDO_CHUCK_LOADED:-0} == 1 ]] && return 0
 typeset -g _SUDO_CHUCK_LOADED=1
@@ -50,7 +50,7 @@ sudo_chuck_banner() {
 
 # Preserve an existing sudo customization. The preview command still works.
 if (( ${+functions[sudo]} || ${+aliases[sudo]} )); then
-    print -u2 -- 'Chuck Sudo: existing sudo function/alias detected; only sudo_chuck_banner was loaded.'
+    print -u2 -- 'Sudo Chuck Check: existing sudo function/alias detected; only sudo_chuck_banner was loaded.'
     return 0
 fi
 

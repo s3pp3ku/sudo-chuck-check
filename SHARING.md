@@ -1,43 +1,55 @@
-# Publish and share Chuck Sudo
+# Share Sudo Chuck Check
 
-## Publish your GitHub repository
+Project: https://github.com/s3pp3ku/sudo-chuck-check
 
-The prepared repository is named `chuck-sudo`. From its directory, after reviewing
-its files and signing in to GitHub CLI, run:
+## Share on Omarchy Show and Tell
 
-```sh
-gh repo create s3pp3ku/chuck-sudo --public --source=. --push --description "Pixel-art Chuck Norris sudo banner with offline jokes for Zsh"
-```
+Open https://github.com/omacom/omarchy/discussions/categories/show-and-tell and
+start a discussion using [SHOW-AND-TELL.md](SHOW-AND-TELL.md). It includes the
+project's origin story, both banner images, and installation instructions.
 
-This command creates a public repository on your account and uploads the local
-commit. If you downloaded a ZIP instead of using the prepared local Git repository,
-first run:
+The PNGs are in `docs/images/`. The Groot image recreates the preserved signature;
+the Chuck image is an illustrative terminal preview. The original Reddit thread
+is not known. The draft says this explicitly and invites help identifying it.
 
-```sh
-git init -b main
-git add .
-git commit -m "Add Chuck Sudo terminal banner"
-```
+The discussion draft is prepared text; it is not automatically posted.
 
-You can also use https://github.com/new and upload the files through GitHub.
-Once published, readers can use **Code → Download ZIP**. For a versioned download,
-create a `v1.0.0` GitHub release and attach `chuck-sudo-v1.0.0.zip` and its checksum.
+## Share a download
 
-## Post on Omarchy Show and Tell
+Readers can use **Code → Download ZIP** on GitHub, or download an attached
+`sudo-chuck-check-v1.1.0.zip`. The package includes the source, sprite, offline jokes,
+project history, previews, installer, uninstaller, and tests.
 
-1. Publish the repository so the link in the draft is live.
-2. Open https://github.com/omacom/omarchy/discussions/categories/show-and-tell
-3. Start a new discussion and use the title and body in [SHOW-AND-TELL.md](SHOW-AND-TELL.md).
-4. Attach a screenshot from `sudo_chuck_banner`, or the included sprite.
-
-The repository URL in the draft is the intended destination. Preparing this package
-does not itself publish a repository or send a discussion post.
-
-## Share the ZIP directly
-
-You can attach `chuck-sudo-v1.0.0.zip` without setting up GitHub. It includes the
-source, sprite, offline jokes, installer, uninstaller, tests, and documentation.
 Recipients extract it, enter the directory, and run `python3 install.py`.
+
+## Publish later updates
+
+From the Git checkout, review and commit your changes, then:
+
+```sh
+git push origin main
+```
+
+For a versioned release, create a tag and archive (substitute a new version for
+future releases):
+
+```sh
+git tag v1.1.0
+git push origin v1.1.0
+git archive --format=zip --prefix=sudo-chuck-check/ --output=sudo-chuck-check-v1.1.0.zip v1.1.0
+gh release create v1.1.0 sudo-chuck-check-v1.1.0.zip --title "Sudo Chuck Check 1.1.0" --notes-file CHANGELOG.md
+```
+
+## Rebuild the illustrations
+
+`python3 tools/build_previews.py` generates `preview.html` from the saved Groot
+signature. It runs only the banner-printing portion, never sudo. Open the HTML
+for the interactive comparison. For reproducible PNGs, use Chromium:
+
+```sh
+chromium --headless --hide-scrollbars --force-device-scale-factor=1 --window-size=1100,600 --screenshot=docs/images/groot-banner.png "file://$PWD/preview.html?capture=groot"
+chromium --headless --hide-scrollbars --force-device-scale-factor=1 --window-size=1100,600 --screenshot=docs/images/sudo-chuck-check-banner.png "file://$PWD/preview.html?capture=chuck"
+```
 
 ## Compatibility
 

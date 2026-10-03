@@ -46,7 +46,7 @@ def protocol():
 def image_bytes(mode, width, height):
     stamp = ASSET.stat().st_mtime_ns
     key = hashlib.sha256(f'{stamp}:{mode}:{width}:{height}'.encode()).hexdigest()[:20]
-    cache = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'chuck-sudo'
+    cache = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'sudo-chuck-check'
     target = cache / (key + ('.sixel' if mode == 'sixel' else '.png'))
     try:
         return target.read_bytes()

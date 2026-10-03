@@ -1,4 +1,4 @@
 __pycache__/
 *.pyc
-.chuck-sudo-install.json
+.sudo-chuck-check-install.json
 *.zip
