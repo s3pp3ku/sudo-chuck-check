@@ -94,26 +94,39 @@ def main():
     beside = data is not None and cols >= 60
     text_col = image_cols + 4 if beside else 1
     width = max(1, min(72, cols - text_col - 1))
-    lines = textwrap.wrap(joke, width) + [''] + textwrap.wrap(TAGLINE, width)
+    joke_lines = textwrap.wrap(joke, width)
+    warning_lines = textwrap.wrap(TAGLINE, width)
+    lines = joke_lines + [''] + warning_lines
+    line_colors = (['joke'] * len(joke_lines)) + [None] + (['warning'] * len(warning_lines))
     # Reserve the entire image rectangle first, so painting it never scrolls
     # its own anchor or leaves the password prompt inside the image.
     if data:
         if beside:
             offset = max(0, (image_rows - len(lines)) // 2)
             lines = [''] * offset + lines
+            line_colors = [None] * offset + line_colors
             lines += [''] * max(0, image_rows - len(lines))
+            line_colors += [None] * max(0, image_rows - len(line_colors))
         else:
             lines = [''] * image_rows + lines
+            line_colors = [None] * image_rows + line_colors
         # A very short terminal cannot hold the image plus this particular joke.
         if len(lines) > rows - 3:
             data = None
             text_col = 1
             width = max(1, min(72, cols - 2))
-            lines = textwrap.wrap(joke, width) + [''] + textwrap.wrap(TAGLINE, width)
-    color = '\033[38;5;117m' if out.isatty() and not os.environ.get('NO_COLOR') else ''
-    reset = '\033[0m' if color else ''
+            joke_lines = textwrap.wrap(joke, width)
+            warning_lines = textwrap.wrap(TAGLINE, width)
+            lines = joke_lines + [''] + warning_lines
+            line_colors = (['joke'] * len(joke_lines)) + [None] + (['warning'] * len(warning_lines))
+    colors = {
+        'joke': '\033[38;5;117m',      # bright cyan
+        'warning': '\033[38;5;214m',  # warm orange
+    } if out.isatty() and not os.environ.get('NO_COLOR') else {}
     out.write('\n')
-    for line in lines:
+    for index, line in enumerate(lines):
+        color = colors.get(line_colors[index], '')
+        reset = '\033[0m' if color else ''
         out.write((' ' * text_col + color + line + reset if line else '') + '\n')
     if data:
         out.write(f'\0337\033[{len(lines)}A\033[2G')
